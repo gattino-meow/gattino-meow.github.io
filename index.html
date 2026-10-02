@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff" id="theme-color-meta">
+    <meta name="color-scheme" content="light dark">
+    <title>Archivio</title>
+    
+    <meta name="description" content="Archivio guida TV">
+    <meta property="og:title" content="Archivio">
+    <meta property="og:description" content="Archivio guida TV">
+    <meta property="og:image" content="https://guidatv-omega.vercel.app/output/guides/icona.png">
+    <meta property="og:type" content="website">
+
+    <link rel="icon" type="image/png" href="https://guidatv-omega.vercel.app/output/guides/icona.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        (function() {
+            var savedTheme = localStorage.getItem('theme');
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+
+            var savedSize = localStorage.getItem('tv_font_size') || 'medium';
+            var pxSize = '13px';
+            if (savedSize === 'small') pxSize = '11px';
+            if (savedSize === 'large') pxSize = '16px';
+            if (savedSize === 'xlarge') pxSize = '19px';
+            document.documentElement.style.setProperty('--base-font-size', pxSize);
+        })();
+    </script>
+
+    <style>
+        :root {
+            --font-stack: "JetBrains Mono", monospace;
+            --base-font-size: 13px;
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --dim-text: #555555;
+            --border-color: #dddddd;
+            --hover-bg: #f5f5f5;
+            --accent-color: #0066cc;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #000000;
+            --text-color: #abb2bf;
+            --dim-text: #737984;
+            --border-color: #222222;
+            --hover-bg: #111111;
+            --accent-color: #58a6ff;
+        }
+
+        body {
+            font-family: var(--font-stack);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 24px;
+            font-size: var(--base-font-size);
+            line-height: 1.6;
+            transition: background-color 0.15s, color 0.15s;
+            text-align: left;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed var(--border-color);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 1.25em;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .today-btn {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 0 8px;
+            border-radius: 4px;
+            height: 28px;
+            font-family: var(--font-stack);
+            font-size: 0.85em;
+            color: var(--text-color);
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
+
+        .today-btn:hover {
+            background-color: var(--hover-bg);
+        }
+
+        #info-btn {
+            cursor: pointer;
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 5px;
+            border-radius: 4px;
+            height: 28px;
+            width: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        #info-btn:hover {
+            background-color: var(--hover-bg);
+        }
+
+        #info-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            color: var(--text-color);
+        }
+
+        .text-size-btn {
+            position: relative;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            padding: 5px;
+            border-radius: 4px;
+            height: 28px;
+            width: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .text-size-btn:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .text-size-btn svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-color);
+        }
+
+        #size-select {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            border: none;
+            background: transparent;
+        }
+
+        #theme-toggle {
+            cursor: pointer;
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 5px;
+            border-radius: 4px;
+            height: 28px;
+            width: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        #theme-toggle:hover {
+            background-color: var(--hover-bg);
+        }
+
+        #theme-toggle svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-color);
+        }
+
+        .sun-icon { display: none; }
+        [data-theme="dark"] .sun-icon { display: block; }
+        [data-theme="dark"] .moon-icon { display: none; }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        select, input[type="date"] {
+            font-family: var(--font-stack);
+            background-color: transparent;
+            color: var(--accent-color);
+            border: none;
+            border-bottom: 1px dashed var(--border-color);
+            padding: 4px 0;
+            font-size: 1.05em;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        select:focus, input[type="date"]:focus {
+            border-bottom-color: var(--accent-color);
+        }
+
+        #schedule-container {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .event-block {
+            margin-bottom: 28px;
+            width: 100%;
+        }
+
+        .event-time {
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 1.05em;
+            margin-bottom: 2px;
+        }
+
+        .event-title {
+            font-size: 1.25em;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .event-synopsis {
+            color: var(--dim-text);
+            font-size: 0.95em;
+            font-style: italic;
+            white-space: pre-line;
+            font-weight: 300;
+            text-align: justify;
+        }
+
+        #status-msg {
+            color: var(--dim-text);
+            font-style: italic;
+        }
+
+        dialog {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px 20px;
+            font-family: var(--font-stack);
+            font-size: var(--base-font-size);
+            max-width: 320px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: var(--dim-text);
+            font-family: var(--font-stack);
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 0 4px;
+            line-height: 1;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--text-color);
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 16px; }
+            select, input[type="date"] { width: 100%; }
+            .control-group { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <h1>Archivio</h1>
+        
+        <div class="header-actions">
+            <button id="today-btn" class="today-btn">Vai ad oggi</button>
+            <button id="info-btn" title="Informazioni" aria-label="Informazioni">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                    <rect width="256" height="256" fill="none"/>
+                    <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-4,48a12,12,0,1,1-12,12A12,12,0,0,1,124,72Zm12,112a16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40a8,8,0,0,1,0,16Z"/>
+                </svg>
+            </button>
+
+            <div class="text-size-btn" title="Dimensione testo">
+                <svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g transform="translate(-336.000000, 0.000000)">
+                            <g transform="translate(336.000000, 0.000000)">
+                                <path d="M24,0 L24,24 L0,24 L0,0 L24,0 Z" fill="none"></path>
+                                <path d="M21,12 C21.5523,12 22,12.4477 22,13 L22,19 C22,19.5523 21.5523,20 21,20 C20.5946,20 20.2456,19.7588 20.0886,19.4121 C19.4807,19.785 18.7654,20 18,20 C15.7909,20 14,18.2092 14,16 C14,13.7909 15.7909,12 18,12 C18.7654,12 19.4807,12.215 20.0886,12.5879 C20.2456,12.2412 20.5946,12 21,12 Z M8.00003,4 C8.73237,4 9.38095,4.47279 9.60506,5.17 L13.9521,18.694 C14.1211,19.2198 13.8318,19.783 13.306,19.952 C12.7802,20.121 12.217,19.8318 12.048,19.306 L10.6639,15 L5.33612,15 L3.95205,19.306 C3.78305,19.8318 3.21981,20.121 2.69402,19.952 C2.16823,19.783 1.87899,19.2198 2.048,18.694 L6.39499,5.17 C6.6191,4.47279 7.26768,4 8.00003,4 Z M18,14 C16.8954,14 16,14.8955 16,16 C16,17.1046 16.8954,18 18,18 C19.1046,18 20,17.1046 20,16 C20,14.8955 19.1046,14 18,14 Z M8.00003,6.71232 L5.97898,13 L10.0211,13 L8.00003,6.71232 Z" fill="currentColor"></path>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                <select id="size-select" aria-label="Dimensione testo" title="Dimensione testo">
+                    <option value="small">Piccolo</option>
+                    <option value="medium">Normale</option>
+                    <option value="large">Grande</option>
+                    <option value="xlarge">Molto grande</option>
+                </select>
+            </div>
+
+            <button id="theme-toggle" title="Cambia modalità" aria-label="Cambia modalità chiaro/scuro">
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 11.5373 21.3065 11.4608 21.0672 11.8568C19.9289 13.7406 17.8615 15 15.5 15C11.9101 15 9 12.0899 9 8.5C9 6.13845 10.2594 4.07105 12.1432 2.93276C12.5392 2.69347 12.4627 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="currentColor"></path>
+                </svg>
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18 12C18 15.3137 15.3137 18 12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12Z" fill="currentColor"></path>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 1.25C12.4142 1.25 12.75 1.58579 12.75 2V3C12.75 3.41421 12.4142 3.75 12 3.75C11.5858 3.75 11.25 3.41421 11.25 3V2C11.25 1.58579 11.5858 1.25 12 1.25ZM4.39861 4.39861C4.6915 4.10572 5.16638 4.10572 5.45927 4.39861L5.85211 4.79145C6.145 5.08434 6.145 5.55921 5.85211 5.85211C5.55921 6.145 5.08434 6.145 4.79145 5.85211L4.39861 5.45927C4.10572 5.16638 4.10572 4.6915 4.39861 4.39861ZM19.6011 4.39887C19.894 4.69176 19.894 5.16664 19.6011 5.45953L19.2083 5.85237C18.9154 6.14526 18.4405 6.14526 18.1476 5.85237C17.8547 5.55947 17.8547 5.0846 18.1476 4.79171L18.5405 4.39887C18.8334 4.10598 19.3082 4.10598 19.6011 4.39887ZM1.25 12C1.25 11.5858 1.58579 11.25 2 11.25H3C3.41421 11.25 3.75 11.5858 3.75 12C3.75 12.4142 3.41421 12.75 3 12.75H2C1.58579 12.75 1.25 12.4142 1.25 12ZM20.25 12C20.25 11.5858 20.5858 11.25 21 11.25H22C22.4142 11.25 22.75 11.5858 22.75 12C22.75 12.4142 22.4142 12.75 22 12.75H21C20.5858 12.75 20.25 12.4142 20.25 12ZM18.1476 18.1476C18.4405 17.8547 18.9154 17.8547 19.2083 18.1476L19.6011 18.5405C19.894 18.8334 19.894 19.3082 19.6011 19.6011C19.3082 19.894 18.8334 19.894 18.5405 19.6011L18.1476 19.2083C17.8547 18.9154 17.8547 18.4405 18.1476 18.1476ZM5.85211 18.1479C6.145 18.4408 6.145 18.9157 5.85211 19.2086L5.45927 19.6014C5.16638 19.8943 4.6915 19.8943 4.39861 19.6014C4.10572 19.3085 4.10572 18.8336 4.39861 18.5407L4.79145 18.1479C5.08434 17.855 5.55921 17.855 5.85211 18.1479ZM12 20.25C12.4142 20.25 12.75 20.5858 12.75 21V22C12.75 22.4142 12.4142 22.75 12 22.75C11.5858 22.75 11.25 20.5858 11.25 22V21C11.25 20.5858 11.5858 20.25 12 20.25Z" fill="currentColor"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label for="channel-select">Canale:</label>
+            <select id="channel-select"></select>
+        </div>
+        <div class="control-group">
+            <label for="date-select">Giorno:</label>
+            <input type="date" id="date-select">
+        </div>
+    </div>
+
+    <div id="status-msg">Caricamento indice...</div>
+    <div id="schedule-container"></div>
+
+    <dialog id="info-dialog">
+        <div class="modal-header">
+            <span class="modal-title">Info archivio</span>
+            <button type="button" id="close-dialog" class="modal-close-btn" aria-label="Chiudi">&times;</button>
+        </div>
+        <div id="modal-content"></div>
+    </dialog>
+
+    <script>
+        const INDEX_FILE = 'index_structure.json';
+        let fileSystem = null;
+        const fileCache = {};
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeMeta = document.getElementById('theme-color-meta');
+        const todayBtn = document.getElementById('today-btn');
+        const infoBtn = document.getElementById('info-btn');
+        const infoDialog = document.getElementById('info-dialog');
+        const closeDialog = document.getElementById('close-dialog');
+        const modalContent = document.getElementById('modal-content');
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                if (themeMeta) themeMeta.setAttribute('content', '#000000');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
+            }
+        }
+
+        const initialIsDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (themeMeta) themeMeta.setAttribute('content', initialIsDark ? '#000000' : '#ffffff');
+
+        themeToggle.addEventListener('click', () => {
+            let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            let nextTheme = isDark ? 'light' : 'dark';
+            localStorage.setItem('theme', nextTheme);
+            applyTheme(nextTheme);
+        });
+
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                if (!localStorage.getItem('theme')) {
+                    applyTheme(event.matches ? 'dark' : 'light');
+                }
+            });
+        }
+
+        function getTodayStr() {
+            const localDate = new Date();
+            const offset = localDate.getTimezoneOffset();
+            const adjustedDate = new Date(localDate.getTime() - (offset * 60 * 1000));
+            return adjustedDate.toISOString().split('T')[0];
+        }
+
+        function updateTodayBtnVisibility() {
+            const dateSelect = document.getElementById('date-select');
+            if (dateSelect.value && dateSelect.value !== getTodayStr()) {
+                todayBtn.style.display = 'inline-flex';
+            } else {
+                todayBtn.style.display = 'none';
+            }
+        }
+
+        infoBtn.addEventListener('click', () => {
+            let updateText = "Non disponibile";
+            if (fileSystem && fileSystem._meta && fileSystem._meta.last_saved) {
+                const dateObj = new Date(fileSystem._meta.last_saved);
+                if (!isNaN(dateObj.getTime())) {
+                    updateText = dateObj.toLocaleString('it-IT', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+                } else {
+                    updateText = fileSystem._meta.last_saved;
+                }
+            }
+            modalContent.innerHTML = `<p style="margin: 0;"><strong>Ultimo aggiornamento:</strong><br>${updateText}</p>`;
+            infoDialog.showModal();
+        });
+
+        closeDialog.addEventListener('click', () => {
+            infoDialog.close();
+        });
+
+        infoDialog.addEventListener('click', (e) => {
+            if (e.target === infoDialog) {
+                infoDialog.close();
+            }
+        });
+
+        async function init() {
+            try {
+                const resp = await fetch(INDEX_FILE);
+                if (!resp.ok) throw new Error("Impossibile caricare l'indice dell'archivio.");
+                fileSystem = await resp.json();
+                
+                setupControls();
+                loadSchedule();
+            } catch (err) {
+                console.error('Errore durante il caricamento dell\'indice:', err);
+                document.getElementById('status-msg').textContent = "Errore: " + err.message;
+            }
+        }
+
+        function setupControls() {
+            const channelSelect = document.getElementById('channel-select');
+            const dateSelect = document.getElementById('date-select');
+            const sizeSelect = document.getElementById('size-select');
+
+            const channels = Object.keys(fileSystem).filter(ch => ch !== '_meta').sort((a, b) => a.localeCompare(b));
+            
+            channelSelect.innerHTML = '';
+            channels.forEach(ch => {
+                const opt = document.createElement('option');
+                opt.value = ch;
+                opt.textContent = ch;
+                channelSelect.appendChild(opt);
+            });
+
+            let savedChannel = localStorage.getItem('tv_channel');
+            if (savedChannel && channels.includes(savedChannel)) {
+                channelSelect.value = savedChannel;
+            } else if (channels.includes("Rai 1")) {
+                channelSelect.value = "Rai 1";
+                localStorage.setItem('tv_channel', "Rai 1");
+            } else if (channels.length > 0) {
+                channelSelect.value = channels[0];
+                localStorage.setItem('tv_channel', channels[0]);
+            }
+
+            let savedDate = localStorage.getItem('tv_date');
+            if (savedDate) {
+                dateSelect.value = savedDate;
+            } else {
+                const todayStr = getTodayStr();
+                dateSelect.value = todayStr;
+                localStorage.setItem('tv_date', todayStr);
+            }
+
+            let savedSize = localStorage.getItem('tv_font_size') || 'medium';
+            sizeSelect.value = savedSize;
+
+            updateTodayBtnVisibility();
+
+            channelSelect.addEventListener('change', () => {
+                localStorage.setItem('tv_channel', channelSelect.value);
+                loadSchedule();
+            });
+
+            dateSelect.addEventListener('change', () => {
+                localStorage.setItem('tv_date', dateSelect.value);
+                updateTodayBtnVisibility();
+                loadSchedule();
+            });
+
+            todayBtn.addEventListener('click', () => {
+                const todayStr = getTodayStr();
+                dateSelect.value = todayStr;
+                localStorage.setItem('tv_date', todayStr);
+                updateTodayBtnVisibility();
+                loadSchedule();
+            });
+
+            sizeSelect.addEventListener('change', () => {
+                localStorage.setItem('tv_font_size', sizeSelect.value);
+                applyFontSize(sizeSelect.value);
+            });
+        }
+
+        function applyFontSize(size) {
+            let pxSize = '13px';
+            if (size === 'small') pxSize = '11px';
+            if (size === 'large') pxSize = '16px';
+            if (size === 'xlarge') pxSize = '19px';
+            document.documentElement.style.setProperty('--base-font-size', pxSize);
+        }
+
+        function findFilePathForDate(channelName, targetDate) {
+            const channelNode = fileSystem[channelName];
+            if (!channelNode) return null;
+
+            const foundFiles = [];
+            
+            function traverse(node, currentPath) {
+                if (Array.isArray(node)) {
+                    node.forEach(file => {
+                        foundFiles.push({ pathParts: [...currentPath], fileName: file });
+                    });
+                } else if (typeof node === 'object' && node !== null) {
+                    for (const key in node) {
+                        traverse(node[key], [...currentPath, key]);
+                    }
+                }
+            }
+            
+            traverse(channelNode, []);
+
+            for (const fileObj of foundFiles) {
+                const fileName = fileObj.fileName;
+                
+                if (fileName === `${targetDate}.txt`) {
+                    return ['Archivio', channelName, ...fileObj.pathParts, fileName].join('/');
+                }
+                
+                const rangeMatch = fileName.match(/^(\d{4}-\d{2}-\d{2})_to_(\d{4}-\d{2}-\d{2})\.txt$/);
+                if (rangeMatch) {
+                    const start = rangeMatch[1];
+                    const end = rangeMatch[2];
+                    if (targetDate >= start && targetDate <= end) {
+                        return ['Archivio', channelName, ...fileObj.pathParts, fileName].join('/');
+                    }
+                }
+            }
+            return null;
+        }
+
+        function extractDayContent(fileText, targetDate) {
+            const bannerRegex = /={50}\n📅 DATA: (\d{4}-\d{2}-\d{2})\n={50}\n/g;
+            
+            if (bannerRegex.test(fileText)) {
+                bannerRegex.lastIndex = 0;
+                const parts = fileText.split(/={50}\n📅 DATA: \d{4}-\d{2}-\d{2}\n={50}\n/);
+                const dates = [];
+                let match;
+                while ((match = bannerRegex.exec(fileText)) !== null) {
+                    dates.push(match[1]);
+                }
+                
+                const dayIndex = dates.indexOf(targetDate);
+                if (dayIndex !== -1 && parts[dayIndex + 1]) {
+                    return parts[dayIndex + 1].trim();
+                }
+                console.warn('Data non trovata nel file per il canale/giorno richiesto:', targetDate, 'date disponibili:', dates);
+                return null;
+            } else {
+                let clean = fileText.replace(/^Guida TV per .*? - \d{4}-\d{2}-\d{2}\n={50}\n/, '');
+                return clean.trim();
+            }
+        }
+
+        async function loadSchedule() {
+            const channel = document.getElementById('channel-select').value;
+            const date = document.getElementById('date-select').value;
+            const container = document.getElementById('schedule-container');
+            const statusMsg = document.getElementById('status-msg');
+
+            container.innerHTML = '';
+            statusMsg.style.display = 'block';
+            statusMsg.textContent = "Caricamento palinsesto...";
+
+            if (!channel || !date) {
+                statusMsg.textContent = "Nessun canale o data selezionata.";
+                return;
+            }
+
+            const filePath = findFilePathForDate(channel, date);
+            if (!filePath) {
+                console.warn('Nessun file di palinsesto trovato per', channel, date);
+                statusMsg.innerHTML = "<em>Nessun palinsesto disponibile.</em>";
+                return;
+            }
+
+            try {
+                let rawText;
+                if (fileCache[filePath]) {
+                    rawText = fileCache[filePath];
+                } else {
+                    const resp = await fetch(filePath);
+                    if (!resp.ok) throw new Error(`Richiesta fallita per ${filePath} (status ${resp.status})`);
+                    rawText = await resp.text();
+                    fileCache[filePath] = rawText;
+                }
+
+                const dayContent = extractDayContent(rawText, date);
+                if (!dayContent) {
+                    statusMsg.innerHTML = "<em>Nessun palinsesto disponibile.</em>";
+                    return;
+                }
+
+                statusMsg.style.display = 'none';
+
+                const blocks = dayContent.split(/\n-{30,}\n|\n-{30,}/);
+
+                blocks.forEach(block => {
+                    const lines = block.split('\n').map(l => l.trim()).filter(l => l);
+                    if (lines.length === 0) return;
+
+                    const titleLine = lines[0];
+                    const timeMatch = titleLine.match(/^(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})\s*-\s*(.*)$/);
+
+                    const eventDiv = document.createElement('div');
+                    eventDiv.className = 'event-block';
+
+                    if (timeMatch) {
+                        const timeSpan = document.createElement('div');
+                        timeSpan.className = 'event-time';
+                        timeSpan.textContent = `${timeMatch[1]} - ${timeMatch[2]}`;
+                        eventDiv.appendChild(timeSpan);
+
+                        const titleSpan = document.createElement('div');
+                        titleSpan.className = 'event-title';
+                        titleSpan.textContent = timeMatch[3];
+                        eventDiv.appendChild(titleSpan);
+                    } else {
+                        const titleSpan = document.createElement('div');
+                        titleSpan.className = 'event-title';
+                        titleSpan.textContent = titleLine;
+                        eventDiv.appendChild(titleSpan);
+                    }
+
+                    const synopsisLines = lines.slice(1).filter(line => !/^[-_]+$/.test(line));
+                    if (synopsisLines.length > 0) {
+                        const synDiv = document.createElement('div');
+                        synDiv.className = 'event-synopsis';
+                        synDiv.textContent = synopsisLines.join('\n');
+                        eventDiv.appendChild(synDiv);
+                    }
+
+                    container.appendChild(eventDiv);
+                });
+
+                if (container.children.length === 0) {
+                    statusMsg.style.display = 'block';
+                    statusMsg.innerHTML = "<em>Nessun palinsesto disponibile.</em>";
+                }
+
+            } catch (err) {
+                console.error('Errore durante il caricamento del palinsesto:', err);
+                statusMsg.style.display = 'block';
+                statusMsg.innerHTML = "<em>Nessun palinsesto disponibile.</em>";
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
